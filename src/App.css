@@ -1,0 +1,14 @@
+.App {
+  max-width: 60%;
+  margin: 100px auto;
+}
+
+.question-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.gray {
+  color: gray;
+}
