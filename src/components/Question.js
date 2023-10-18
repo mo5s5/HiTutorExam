@@ -7,7 +7,7 @@ import { Context } from '../Context';
 function Question({ data }) {
   const [isOpened, setIsOpened] = useState(data.isOpened);
   const [isAnswered, setIsAnswered] = useState(data.isAnswered);
-  const { setSelectedPoints, selectedPoints, setTries, tries, handleModalOpen, setModalObject } = useContext(Context);
+  const { setSelectedPoints, selectedPoints, setTries, tries, handleModalOpen, modalObject, setModalObject } = useContext(Context);
   // data=questionList
 
   useEffect(() => {
@@ -19,7 +19,10 @@ function Question({ data }) {
 
 
   function onOpenQuestion(data) {
-    setModalObject(data);
+    if(data.id!==modalObject.id){
+      setModalObject(data);
+    }
+   
     if (!data.isOpened) {
       if (tries >= 1) {
         // eslint-disable-next-line no-restricted-globals

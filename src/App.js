@@ -27,42 +27,62 @@ function App() {
   const [answer, setAnswer] = useState('');
 
 
+  const [studentObject, setStudentObject] = useState({
+    email: "",
+    name: "",
+    questions: [{}]
+  })
+
+
 
   const [modalState, setModalState] = useState(false);
   const handleModalOpen = () => setModalState(true);
   const handleModalClose = () => {
     setModalObject({});
+    setAnswer('');
     setModalState(false);
 
   }
 
   const navigate = useNavigate();
 
-  const emailPattern =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    // /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
   useEffect(() => {
     getStudents();
   }, []);
 
-  const onStart = async (studentName, studentEmail) => {
-    if (studentName && studentEmail) {
-      if (!emailPattern.test(studentEmail)) { alert('email required') }
-      else {
-        const student = {
-          name: studentName,
-          email: studentEmail
-        }
-        console.log({ student });
-        await addDoc(studentsRef, student);
-        getStudents();
 
-        navigate('/start')
-      }
-    }
-    else console.log('please fill the fields');
+  const uploadAndNavigate= async()=> {
+    await addDoc(studentsRef, studentObject);
+                // getStudents();
+
+                console.log({ studentObject });
+                navigate('/start')
   }
+
+  // const onStart = async (studentName, studentEmail) => {
+  //   if (studentName && studentEmail) {
+  //     if (!emailPattern.test(studentEmail)) { alert('email required') }
+  //     else {
+  //       const student = {
+  //         name: studentName,
+  //         email: studentEmail
+  //       }
+  //       setStudentObject(studentObject.name = studentName)
+  //       setStudentObject(studentObject.email = studentEmail)
+  //       console.log({ student });
+  //       await addDoc(studentsRef, student);
+  //       // getStudents();
+
+  //       console.log({ studentObject });
+  //       navigate('/start')
+  //     }
+  //   }
+  //   else console.log('please fill the fields');
+  // }
 
   const getStudents = async () => {
     const querySnapshot = await getDocs(studentsRef);
@@ -113,17 +133,26 @@ function App() {
   }
 
   const submitAnswer = () => {
-    console.log({ answer });
+    // console.log({ answer });
+    let q = studentObject.questions
+    console.log({ q });
+    setStudentObject(studentObject.questions.push({
+      question: modalObject,
+      answer: answer
+    }))
+    console.log(studentObject);
     handleModalClose();
-    
+
   }
 
 
 
   return (
     <Context.Provider value={{
-      tries, setTries, selectedPoints, setSelectedPoints, score, onStart,
-      studentName, studentEmail, setStudentEmail, studentsRef, examQuestions,
+      tries, setTries, selectedPoints, setSelectedPoints, score, 
+      // onStart,
+      uploadAndNavigate,
+      studentName, studentEmail, setStudentEmail, studentObject,setStudentObject, studentsRef, examQuestions,
       setStudentName, getExamQuestions, modalState, setModalState,
       handleModalClose, handleModalOpen, modalObject, setModalObject,
       closeAnswer, submitAnswer, answer, setAnswer
