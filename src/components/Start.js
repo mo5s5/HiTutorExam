@@ -15,7 +15,7 @@ export default function Start() {
     }
 
     return (
-        <div> <h3> Are you sure you want to Start? {studentName[0].toUpperCase() +
+        <div> <h3> Are you sure you want to Start exam of React? {studentName[0].toUpperCase() +
             studentName.slice(1)}</h3>
             <Stack direction='row' spacing={2}>
                 <Button variant='contained' onClick={() => onBack()}>Back</Button>
