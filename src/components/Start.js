@@ -7,9 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Start() {
 
-    const { studentName } = useContext(Context);
+    const { studentName, studentObject } = useContext(Context);
     const navigate = useNavigate();
-
+    const onStart = () => {
+        console.log({ studentObject });
+        navigate('/exam-page')
+    }
     const onBack = () => {
         navigate(-1);
     }
@@ -19,7 +22,7 @@ export default function Start() {
             studentName.slice(1)}</h3>
             <Stack direction='row' spacing={2}>
                 <Button variant='contained' onClick={() => onBack()}>Back</Button>
-                <Button variant='contained' onClick={() => navigate('/exam-page')}>Yes</Button>
+                <Button variant='contained' onClick={() => onStart()}>Start</Button>
             </Stack>
         </div>
     )

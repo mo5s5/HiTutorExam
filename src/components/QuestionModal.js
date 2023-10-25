@@ -24,11 +24,15 @@ const style = {
 export default function QuestionModal() {
 
 
-  const { handleModalClose, modalState, closeAnswer, submitAnswer, modalObject, answer, setAnswer } = useContext(Context)
+  const { handleModalClose, modalState, closeAnswer, submitAnswer, modalObject, answer, setAnswer,studentObject } = useContext(Context)
 
   const handleAnswer = (event) => {
     setAnswer(event.target.value)
+    
   }
+
+  // console.log({studentObject});
+
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
@@ -60,7 +64,9 @@ export default function QuestionModal() {
           </TextField>
           <Stack direction={'row'} spacing={4} marginTop='1rem'>
             <Button onClick={() => closeAnswer()} variant='contained' color='error'>Close</Button>
-            <Button onClick={() => submitAnswer()} variant='contained'>Submit</Button>
+            <Button onClick={() => submitAnswer()} variant='contained'
+              disabled={!answer}
+            >Submit</Button>
           </Stack>
 
         </Box>
