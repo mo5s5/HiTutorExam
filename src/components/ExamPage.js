@@ -9,7 +9,7 @@ import { Button } from '@mui/material';
 
 export default function ExamPage() {
 
-    const { examQuestions } = useContext(Context);
+    const { examQuestions, onFinish } = useContext(Context);
 
     const { tries, selectedPoints, score, getExamQuestions, } = useContext(Context);
 
@@ -32,6 +32,7 @@ export default function ExamPage() {
                     right: 40,
                     // backgroundcolor :'red'
                 }}
+                onClick={() => onFinish()}
             >
                 Finish</Button>
             <div className="question-container">

@@ -16,12 +16,12 @@ function Question({ data }) {
 
 
   function onOpenQuestion(data) {
-
-    if(!data.isAnswered){
+    console.log({data});
+    if (!data.isAnswered) {
       if (data.id !== modalObject.id) {
         setModalObject(data);
       }
-  
+
       if (!data.isOpened) {
         if (tries >= 1) {
           // eslint-disable-next-line no-restricted-globals
@@ -31,18 +31,12 @@ function Question({ data }) {
           setIsOpened(true);
           setSelectedPoints(selectedPoints + data.points)
           setTries(tries - 1);
-          console.log({ modalObject });
-          console.log({ studentObject });
+          // console.log({ modalObject });
+          // console.log({ studentObject });
           // debugger
           // 1
           setStudentObject(studentObject => ({ ...studentObject, ...modalObject }))
-          
-          // 2
-          // setStudentObject(...studentObject, studentObject['questions'].push(modalObject))       
-          
-          // 3
-          // setStudentObject({ ...studentObject, questions: [...studentObject.questions, modalObject] })
-  
+
           handleModalOpen();
         } else {
           alert('You reached limit of tries');
@@ -50,9 +44,9 @@ function Question({ data }) {
       } else {
         handleModalOpen();
       }
-     
-    } else {alert('You almost answered to this question')}
-    
+
+    } else { alert('You almost answered to this question') }
+
 
   }
 

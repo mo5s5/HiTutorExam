@@ -8,6 +8,7 @@ import db from './Firebase';
 import { addDoc, getDocs, collection, getFirestore, doc, updateDoc } from 'firebase/firestore';
 import Start from './components/Start';
 import ExamPage from './components/ExamPage';
+import EndPage from './components/EndPage';
 
 
 
@@ -55,8 +56,8 @@ function App() {
   }, []);
 
 
-  const uploadAndNavigate = async () => {
-    await addDoc(studentsRef, studentObject);
+  const uploadAndNavigate = async () => {  // maybe it would be better to just navigate to the nex page and upload the studenObject when finish
+    // await addDoc(studentsRef, studentObject);
     // getStudents();
 
     // console.log({ studentObject });
@@ -70,8 +71,6 @@ function App() {
     querySnapshot.forEach(doc => {
       studentsArray.push(doc.data());
     })
-
-    // setExamQuestions(studentsArray)
   }
 
   const getExamQuestions = async () => {
@@ -98,21 +97,40 @@ function App() {
   }
 
   const submitAnswer = () => {
-    // console.log({ answer });
     // debugger
     console.log({ studentObject });
     let q = studentObject.questions;
-    console.log({ q });
-    // studentObject => ({ ...studentObject, ...modalObject })
-    // setStudentObject(...studentObject,studentObject.questions.push({
-    setStudentObject(studentObject=>({...studentObject,...studentObject.questions.push({
+    // console.log({ q });
 
-      question: modalObject,
-      answer: answer
-    })}))
-    console.log({studentObject});
+    setStudentObject(studentObject => ({
+      ...studentObject, ...studentObject.questions.push({
+        question: modalObject,
+        answer: answer
+      })
+    }))
+    console.log({ studentObject });
+    setModalObject({ ...modalObject, isAnswered: true })
+    let updateExamQuestion = examQuestions.map((q) => {
+      if (q.id === modalObject.id) {
+        return { ...q, isOpened: true, isAnswered: true };
+      }
+      return q
+    })
+    setExamQuestions(updateExamQuestion)
     handleModalClose();
 
+  }
+
+  const onFinish = async () => {
+    //shift firts object of studentObject.questions[]
+    // apdate studentObject in firebase
+    // stop countdown or move to another page 
+    let updateStudentobject = studentObject;
+    updateStudentobject.questions.shift();
+    setStudentObject({ updateStudentobject })
+    // console.log(studentObject);
+    await addDoc(studentsRef, updateStudentobject);
+    navigate('/end-page')
   }
 
 
@@ -125,13 +143,14 @@ function App() {
       studentName, studentEmail, setStudentEmail, studentObject, setStudentObject, studentsRef, examQuestions,
       setStudentName, getExamQuestions, modalState, setModalState,
       handleModalClose, handleModalOpen, modalObject, setModalObject,
-      closeAnswer, submitAnswer, answer, setAnswer
+      closeAnswer, submitAnswer, answer, setAnswer, onFinish
     }}>
       <div className='App'>
         <Routes>
           <Route path='/' element={<AuthPage />} />
           <Route path='/start' element={<Start />} />
           <Route path='/exam-page' element={<ExamPage />} />
+          <Route path='/end-page' element={<EndPage />} />
         </Routes>
       </div>
     </Context.Provider>

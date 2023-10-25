@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 
-
+import { Context } from '../Context';
 export default function CountDownTimer() {
+    const { onFinish } = useContext(Context)
 
     const [countnDown, setCountDown] = useState(3600);
     const timerId = useRef();
@@ -16,7 +17,7 @@ export default function CountDownTimer() {
             seconds = '0' + seconds
         }
 
-        return minutes + ':' + seconds  
+        return minutes + ':' + seconds
     }
 
 
@@ -29,7 +30,9 @@ export default function CountDownTimer() {
 
     useEffect(() => {
         if (countnDown <= 0) {
+            onFinish();
             clearInterval(timerId.current);
+
         }
     }, [countnDown])
 
