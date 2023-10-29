@@ -18,6 +18,7 @@ export default function AuthPage() {
         uploadAndNavigate,
     } = useContext(Context);
 
+    //navigate with tab between fields  **
     const inputRefs = useRef([]);
 
     const handleKeyDown = (e, index) => {
@@ -49,7 +50,7 @@ export default function AuthPage() {
             }
         }
     };
-
+    //*** */
 
 
     // const [fields, setFields] = useState({ name: "", email: "" })
@@ -76,7 +77,7 @@ export default function AuthPage() {
                 setStudentObject({ ...studentObject, "name": studentName, "email": studentEmail })
                 // console.log({ studentObject });
                 setIsValidEmail(true);
-               
+
                 uploadAndNavigate();
             }
         }
@@ -88,11 +89,13 @@ export default function AuthPage() {
     return (
         <div >
             <Box sx={{
-                width: 600,
+
+                maxWidth: '60%',
                 borderRadius: '5px',
                 border: '3px solid',
                 borderColor: '#32a1ce',
                 padding: '10px',
+                margin:' 100px auto;'
 
             }
             }>

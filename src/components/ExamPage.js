@@ -19,7 +19,7 @@ export default function ExamPage() {
     }, [])
 
     return (
-        <div>
+        <div style={{marginLeft:100,maxWidth:900}}>
             <CountDownTimer />
             <h2>Tries left: {tries}</h2>
             <h2>Total score:  <span className='gray'>{selectedPoints}</span> / {score}</h2>

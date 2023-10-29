@@ -9,6 +9,8 @@ import { addDoc, getDocs, collection, getFirestore, doc, updateDoc } from 'fireb
 import Start from './components/Start';
 import ExamPage from './components/ExamPage';
 import EndPage from './components/EndPage';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminPage from './components/admin/AdminPage';
 
 
 
@@ -143,7 +145,8 @@ function App() {
       studentName, studentEmail, setStudentEmail, studentObject, setStudentObject, studentsRef, examQuestions,
       setStudentName, getExamQuestions, modalState, setModalState,
       handleModalClose, handleModalOpen, modalObject, setModalObject,
-      closeAnswer, submitAnswer, answer, setAnswer, onFinish
+      closeAnswer, submitAnswer, answer, setAnswer, onFinish,
+      navigate
     }}>
       <div className='App'>
         <Routes>
@@ -151,6 +154,8 @@ function App() {
           <Route path='/start' element={<Start />} />
           <Route path='/exam-page' element={<ExamPage />} />
           <Route path='/end-page' element={<EndPage />} />
+          <Route path='/admin-login' element={<AdminLogin />} />
+          <Route path='/admin-page' element={<AdminPage />} />
         </Routes>
       </div>
     </Context.Provider>
