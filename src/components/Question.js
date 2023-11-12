@@ -33,7 +33,6 @@ function Question({ data }) {
           setTries(tries - 1);
           // console.log({ modalObject });
           // console.log({ studentObject });
-          // debugger
           // 1
           setStudentObject(studentObject => ({ ...studentObject, ...modalObject }))
 
@@ -45,7 +44,7 @@ function Question({ data }) {
         handleModalOpen();
       }
 
-    } else { alert('You almost answered to this question') }
+    } else { alert('You already answered to this question') }
 
 
   }

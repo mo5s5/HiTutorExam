@@ -4,19 +4,23 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box'
 import { Context } from '../Context';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AuthPage() {
 
     const {
-        // onStart,
-        studentEmail,
-        studentName,
+        studentName, setStudentName,
         studentObject, setStudentObject,
-        setStudentEmail,
-        setStudentName,
-        uploadAndNavigate,
     } = useContext(Context);
+
+    // const [studentName, setStudentName] = useState('');
+    const [studentEmail, setStudentEmail] = useState('');
+    const navigate = useNavigate();
+
+
+
+
 
     //navigate with tab between fields  **
     const inputRefs = useRef([]);
@@ -33,12 +37,10 @@ export default function AuthPage() {
         }
     };
     const handleInputName = (e, index) => {
-        // Handle input change logic here
         setStudentName(e.target.value)
     };
 
     const handleInputEmail = (e, index) => {
-        // Handle input change logic here
         setStudentEmail(e.target.value)
     };
 
@@ -53,7 +55,6 @@ export default function AuthPage() {
     //*** */
 
 
-    // const [fields, setFields] = useState({ name: "", email: "" })
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidName, setIsValidName] = useState(true);
 
@@ -77,8 +78,7 @@ export default function AuthPage() {
                 setStudentObject({ ...studentObject, "name": studentName, "email": studentEmail })
                 // console.log({ studentObject });
                 setIsValidEmail(true);
-
-                uploadAndNavigate();
+                navigate('/start')
             }
         }
         else {
@@ -95,7 +95,7 @@ export default function AuthPage() {
                 border: '3px solid',
                 borderColor: '#32a1ce',
                 padding: '10px',
-                margin:' 100px auto;'
+                margin: ' 100px auto;'
 
             }
             }>

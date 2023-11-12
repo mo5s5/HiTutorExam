@@ -11,10 +11,16 @@ import ExamPage from './components/ExamPage';
 import EndPage from './components/EndPage';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminPage from './components/admin/AdminPage';
+import { useDispatch, useSelector } from 'react-redux';
+import { addExamQuestionsReducer, closeUpdateQuestionsReducer } from './redux/examSlice';
+import storage from 'redux-persist/lib/storage';
 
 
 
 function App() {
+
+  const dispatch = useDispatch();
+  const examQuestionSelector = useSelector(state => state.addExamQuestionsReducer.examQuestions)
 
   const navigate = useNavigate();                     // for navigation between pages without <a> or <Link> tag
 
@@ -23,7 +29,7 @@ function App() {
   const [score, setScore] = useState(0);
   // const [questionOpenState,setQuestionOpenState] = useState(false)
   const [studentName, setStudentName] = useState('');
-  const [studentEmail, setStudentEmail] = useState('');
+  // const [studentEmail, setStudentEmail] = useState('');
   const [examQuestions, setExamQuestions] = useState([]);
   const [modalObject, setModalObject] = useState({});
 
@@ -31,6 +37,7 @@ function App() {
   const questionsRef = collection(db, 'questions');
 
   const [answer, setAnswer] = useState('');
+  const [examFirstMount, setExamFirstMount] = useState(true);
 
 
   const [studentObject, setStudentObject] = useState({                    // in student object we will store all data about student. later we will show to teacher information from this object  
@@ -49,7 +56,6 @@ function App() {
     setModalObject({});                                 // make  modalObject plain because if otherwise nex time it will open the same modal 
     setAnswer('');
     setModalState(false);                                 // close modal window
-
   }
 
 
@@ -58,13 +64,13 @@ function App() {
   }, []);
 
 
-  const uploadAndNavigate = async () => {  // maybe it would be better to just navigate to the nex page and upload the studenObject when finish
-    // await addDoc(studentsRef, studentObject);
-    // getStudents();
+  // const navigateToStart = async () => {  // maybe it would be better to just navigate to the nex page and upload the studenObject when finish
+  //   // await addDoc(studentsRef, studentObject);
+  //   // getStudents();
 
-    // console.log({ studentObject });
-    navigate('/start')
-  }
+  //   // console.log({ studentObject });
+  //   navigate('/start')
+  // }
 
 
   const getStudents = async () => {
@@ -76,12 +82,31 @@ function App() {
   }
 
   const getExamQuestions = async () => {
+    // const firstMount = localStorage.getItem('examFirstMount');
+    // if (!firstMount) {
     const querySnapshot = await getDocs(questionsRef);
     const examQuestionsArray = [];
     querySnapshot.forEach(doc => {
       examQuestionsArray.push({ ...doc.data(), id: doc.id });
+      // dispatch(addExamQuestionsReducer({ payload: examQuestionsArray }))
       setExamQuestions(examQuestionsArray);
+      // console.log({...examQuestionSelector});
+      localStorage.setItem('questions', JSON.stringify(examQuestionsArray.map(item => item)))
     })
+    console.log('fisrt mount');
+    localStorage.setItem('examFirstMount', JSON.stringify('inch vor ban '))
+    // }
+    // else {
+    //   console.log('Second Mount');
+    //   const localQuestions = JSON.parse(localStorage.getItem('questions'))
+    //   setExamQuestions(localQuestions)
+    // }
+
+    // setExamQuestions(storage.addExamQuestionsReducer)  
+    // const localQuestions=useSelector(state=>state.addExamQuestionsReducer.addExamQuestionsReducer)
+
+    // }
+
     // console.log({ examQuestionsArray });
   }
 
@@ -93,14 +118,17 @@ function App() {
       }
       return q
     })
-    setExamQuestions(updateExamQuestion)
+    setExamQuestions(updateExamQuestion);
+    dispatch(closeUpdateQuestionsReducer({ updateExamQuestion }))
+    localStorage.setItem('questions', JSON.stringify(updateExamQuestion))                                                    //refresh localQuestions
+    localStorage.setItem('selctedPoints', JSON.stringify(selectedPoints))
     handleModalClose();
 
   }
 
   const submitAnswer = () => {
-    // debugger
     console.log({ studentObject });
+    setScore(score + modalObject.points);
     let q = studentObject.questions;
     // console.log({ q });
 
@@ -119,6 +147,8 @@ function App() {
       return q
     })
     setExamQuestions(updateExamQuestion)
+    localStorage.setItem('questions', JSON.stringify(updateExamQuestion))                                                    //refresh localQuestions
+
     handleModalClose();
 
   }
@@ -139,11 +169,17 @@ function App() {
 
   return (
     <Context.Provider value={{
-      tries, setTries, selectedPoints, setSelectedPoints, score,
+      tries, setTries,
+      selectedPoints, setSelectedPoints,
+      score,
       // onStart,
-      uploadAndNavigate,
-      studentName, studentEmail, setStudentEmail, studentObject, setStudentObject, studentsRef, examQuestions,
-      setStudentName, getExamQuestions, modalState, setModalState,
+      // navigateToStart,
+      studentName, setStudentName,
+      // studentEmail, setStudentEmail,
+      examFirstMount, setExamFirstMount,
+      studentObject, setStudentObject, studentsRef,
+      setExamQuestions, examQuestions,
+      getExamQuestions, modalState, setModalState,
       handleModalClose, handleModalOpen, modalObject, setModalObject,
       closeAnswer, submitAnswer, answer, setAnswer, onFinish,
       navigate

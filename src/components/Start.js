@@ -7,10 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Start() {
 
-    const { studentName, studentObject } = useContext(Context);
+    const { studentName,
+        //  studentObject
+         } = useContext(Context);
     const navigate = useNavigate();
     const onStart = () => {
-        console.log({ studentObject });
+        // console.log({ studentObject });
         navigate('/exam-page')
     }
     const onBack = () => {

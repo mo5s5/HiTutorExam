@@ -24,11 +24,11 @@ const style = {
 export default function QuestionModal() {
 
 
-  const { handleModalClose, modalState, closeAnswer, submitAnswer, modalObject, answer, setAnswer,studentObject } = useContext(Context)
+  const { handleModalClose, modalState, closeAnswer, submitAnswer, modalObject, answer, setAnswer } = useContext(Context)
 
   const handleAnswer = (event) => {
     setAnswer(event.target.value)
-    
+
   }
 
   // console.log({studentObject});
