@@ -16,9 +16,10 @@ export default function ExamPage() {
     const dispatch = useDispatch();
     const questions = useSelector(state => state.addExamQuestionsReducer.examQuestions);
 
-    const { tries,
+    const { tries, setTries,
         selectedPoints, setSelectedPoints,
-        score, getExamQuestions,
+        score, setScore,
+        getExamQuestions,
         examFirstMount, setExamFirstMount, setExamQuestions
     } = useContext(Context);
     //  const[examFirstMount, setExamFirstMount]=useState(true);
@@ -30,28 +31,24 @@ export default function ExamPage() {
         const firstMount = localStorage.getItem('examFirstMount');
         if (!firstMount) {
             getExamQuestions();
+            // localStorage.setItem('score', JSON.stringify(score));                                  //because there could be no actions with this variables. Store them into local
+            localStorage.setItem('selectedPoints', JSON.stringify(selectedPoints));
+            localStorage.setItem('score',JSON.stringify(score));
         } else {
             console.log('Second Mount');
             const localQuestions = JSON.parse(localStorage.getItem('questions'))
             setExamQuestions(localQuestions);
-            const localSelectedPoints = JSON.parse(localStorage.getItem('selctedPoints'))
+            const localSelectedPoints = JSON.parse(localStorage.getItem('selectedPoints'))
             setSelectedPoints(localSelectedPoints);
+            const localTries = JSON.parse(localStorage.getItem('tries'));
+            setTries(localTries);
+            const localScore = JSON.parse(localStorage.getItem('score'));
+            setScore(localScore);
+
         }
-
-        // dispatch(addExamQuestionsReducer( examQuestions ))
-        // setExamFirstMount(false);
-
-        //     console.log('fisrt mount');
-        //     localStorage.setItem('examFirstMount', JSON.stringify('inch vor ban '))
-
-
-        //     // console.log(localStorage.getItem('firstMount'));
-        // }
-        // else {
-        //     // console.log(firstMount);
-        //     console.log('Second Mount');
-        //     localStorage.getItem()
-        // }
+        return()=>{
+            // localStorage.setItem('tries',JSON.stringify(tries));
+        }
 
 
     }, [])

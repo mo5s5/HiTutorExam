@@ -23,7 +23,7 @@ function App() {
   const examQuestionSelector = useSelector(state => state.addExamQuestionsReducer.examQuestions)
 
   const navigate = useNavigate();                     // for navigation between pages without <a> or <Link> tag
-
+  const [countDown, setCountDown] = useState(3600);
   const [tries, setTries] = useState(5);
   const [selectedPoints, setSelectedPoints] = useState(0)
   const [score, setScore] = useState(0);
@@ -37,7 +37,7 @@ function App() {
   const questionsRef = collection(db, 'questions');
 
   const [answer, setAnswer] = useState('');
-  const [examFirstMount, setExamFirstMount] = useState(true);
+  // const [examFirstMount, setExamFirstMount] = useState(true);
 
 
   const [studentObject, setStudentObject] = useState({                    // in student object we will store all data about student. later we will show to teacher information from this object  
@@ -50,6 +50,7 @@ function App() {
 
   const [modalState, setModalState] = useState(false);  // state to decide open modal or not
   const handleModalOpen = () => {
+    localStorage.setItem('tries', JSON.stringify(tries));
     setModalState(true);
   }
   const handleModalClose = () => {
@@ -94,7 +95,7 @@ function App() {
       localStorage.setItem('questions', JSON.stringify(examQuestionsArray.map(item => item)))
     })
     console.log('fisrt mount');
-    localStorage.setItem('examFirstMount', JSON.stringify('inch vor ban '))
+    localStorage.setItem('examFirstMount', JSON.stringify('inch vor ban '));
     // }
     // else {
     //   console.log('Second Mount');
@@ -119,16 +120,21 @@ function App() {
       return q
     })
     setExamQuestions(updateExamQuestion);
-    dispatch(closeUpdateQuestionsReducer({ updateExamQuestion }))
-    localStorage.setItem('questions', JSON.stringify(updateExamQuestion))                                                    //refresh localQuestions
-    localStorage.setItem('selctedPoints', JSON.stringify(selectedPoints))
+    // dispatch(closeUpdateQuestionsReducer({ updateExamQuestion }))
+    localStorage.setItem('questions', JSON.stringify(updateExamQuestion));                                                //refresh localQuestions
+    localStorage.setItem('selectedPoints', JSON.stringify(selectedPoints));
+
+    // localStorage.setItem('score', JSON.stringify(score));
     handleModalClose();
 
   }
 
   const submitAnswer = () => {
     console.log({ studentObject });
-    setScore(score + modalObject.points);
+    console.log({ modalObject });
+    let updateScore = score + modalObject.points
+    setScore(updateScore);
+    localStorage.setItem('score', JSON.stringify(updateScore));
     let q = studentObject.questions;
     // console.log({ q });
 
@@ -146,9 +152,13 @@ function App() {
       }
       return q
     })
-    setExamQuestions(updateExamQuestion)
-    localStorage.setItem('questions', JSON.stringify(updateExamQuestion))                                                    //refresh localQuestions
+    setExamQuestions(updateExamQuestion);
+    localStorage.setItem('questions', JSON.stringify(updateExamQuestion));
+    // debugger;            
+    console.log({ score });                                       //refresh localQuestions
 
+    localStorage.setItem('selectedPoints', JSON.stringify(selectedPoints));
+    localStorage.setItem('tries', JSON.stringify(tries));
     handleModalClose();
 
   }
@@ -164,6 +174,7 @@ function App() {
     await addDoc(studentsRef, updateStudentobject);
     navigate('/end-page')
   }
+ 
 
 
 
@@ -171,12 +182,15 @@ function App() {
     <Context.Provider value={{
       tries, setTries,
       selectedPoints, setSelectedPoints,
-      score,
+      score, setScore,
+      countDown,setCountDown,
+      // countDownRefresh,
+      
       // onStart,
       // navigateToStart,
       studentName, setStudentName,
       // studentEmail, setStudentEmail,
-      examFirstMount, setExamFirstMount,
+      // examFirstMount, setExamFirstMount,
       studentObject, setStudentObject, studentsRef,
       setExamQuestions, examQuestions,
       getExamQuestions, modalState, setModalState,

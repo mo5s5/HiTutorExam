@@ -7,16 +7,30 @@ import { Context } from '../Context';
 function Question({ data }) {
   const [isOpened, setIsOpened] = useState(data.isOpened);
   const [isAnswered, setIsAnswered] = useState(data.isAnswered);
-  const { setSelectedPoints, selectedPoints, setTries, tries, handleModalOpen, modalObject, setModalObject, studentObject, setStudentObject } = useContext(Context);
+  const { setSelectedPoints, selectedPoints,
+    setTries, tries,
+    handleModalOpen,
+    countDown, setCountDown,
+    modalObject, setModalObject,
+    studentObject, setStudentObject } = useContext(Context);
   // data=questionList
 
   useEffect(() => {
     setIsOpened(data.isOpened);
   }, []);
 
+  const timerRefreshForAlert = () => {
+    debugger
+    let pauseTime = new Date().getTime();
+    let start = JSON.parse(localStorage.getItem('startTime'));
+    const difference = Math.floor((pauseTime - start) / 1000);
+    let newTimer = Math.round(countDown - difference);
+    setCountDown(newTimer);
+  }
+
 
   function onOpenQuestion(data) {
-    console.log({data});
+    console.log({ data });
     if (!data.isAnswered) {
       if (data.id !== modalObject.id) {
         setModalObject(data);
@@ -24,8 +38,11 @@ function Question({ data }) {
 
       if (!data.isOpened) {
         if (tries >= 1) {
+
+
           // eslint-disable-next-line no-restricted-globals
           if (!confirm('Are you sure you want to open this question?')) {
+            timerRefreshForAlert();
             return;
           }
           setIsOpened(true);
@@ -36,6 +53,7 @@ function Question({ data }) {
           // 1
           setStudentObject(studentObject => ({ ...studentObject, ...modalObject }))
 
+          timerRefreshForAlert()
           handleModalOpen();
         } else {
           alert('You reached limit of tries');
@@ -46,6 +64,7 @@ function Question({ data }) {
 
     } else { alert('You already answered to this question') }
 
+    
 
   }
 
