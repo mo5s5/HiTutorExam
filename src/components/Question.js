@@ -20,7 +20,7 @@ function Question({ data }) {
   }, []);
 
   const timerRefreshForAlert = () => {
-    debugger
+    // debugger
     let pauseTime = new Date().getTime();
     let start = JSON.parse(localStorage.getItem('startTime'));
     const difference = Math.floor((pauseTime - start) / 1000);

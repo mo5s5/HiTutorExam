@@ -11,16 +11,16 @@ import ExamPage from './components/ExamPage';
 import EndPage from './components/EndPage';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminPage from './components/admin/AdminPage';
-import { useDispatch, useSelector } from 'react-redux';
-import { addExamQuestionsReducer, closeUpdateQuestionsReducer } from './redux/examSlice';
-import storage from 'redux-persist/lib/storage';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { addExamQuestionsReducer, closeUpdateQuestionsReducer } from './redux/examSlice';
+// import storage from 'redux-persist/lib/storage';
 
 
 
 function App() {
 
-  const dispatch = useDispatch();
-  const examQuestionSelector = useSelector(state => state.addExamQuestionsReducer.examQuestions)
+  // const dispatch = useDispatch();
+  // const examQuestionSelector = useSelector(state => state.addExamQuestionsReducer.examQuestions)
 
   const navigate = useNavigate();                     // for navigation between pages without <a> or <Link> tag
   const [countDown, setCountDown] = useState(3600);

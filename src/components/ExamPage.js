@@ -6,15 +6,15 @@ import Question from './Question';
 import CountDownTimer from './CountDownTimer';
 import QuestionModal from './QuestionModal';
 import { Button } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { addExamQuestionsReducer, closeUpdateQuestionsReducer } from '../redux/examSlice';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { addExamQuestionsReducer, closeUpdateQuestionsReducer } from '../redux/examSlice';
 
 
 export default function ExamPage() {
 
     const { examQuestions, onFinish } = useContext(Context);
-    const dispatch = useDispatch();
-    const questions = useSelector(state => state.addExamQuestionsReducer.examQuestions);
+    // const dispatch = useDispatch();
+    // const questions = useSelector(state => state.addExamQuestionsReducer.examQuestions);
 
     const { tries, setTries,
         selectedPoints, setSelectedPoints,
