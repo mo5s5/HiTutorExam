@@ -39,6 +39,8 @@ function App() {
   const [answer, setAnswer] = useState('');
   // const [examFirstMount, setExamFirstMount] = useState(true);
 
+  // const [confirmModalState, setConfirmModalState] = useState(false);
+
 
   const [studentObject, setStudentObject] = useState({                    // in student object we will store all data about student. later we will show to teacher information from this object  
     email: "",
@@ -48,30 +50,121 @@ function App() {
 
 
 
-  const [modalState, setModalState] = useState(false);  // state to decide open modal or not
-  const handleModalOpen = () => {
-    localStorage.setItem('tries', JSON.stringify(tries));
-    setModalState(true);
+  const [questionModalState, setQuestionModalState] = useState(false);  // state to decide open modal or not
+
+
+
+
+
+  /// Alert Dialog Part
+
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [confirmDialogAnswer, setConfirmDialogAnswer] = useState(false);
+  // const [isOpened, setIsOpened] = useState();
+  const [inProcessQuestion, setInProcessQuestion] = useState({});
+  const [dataQ, setDataQ] = useState({});
+
+  const onOpenQuestion = () => {
+    console.log({ dataQ });
+    if (!dataQ.isAnswered) {
+      if (dataQ.id !== modalObject.id) {
+        setModalObject(dataQ);
+      }
+      if (!dataQ.isOpened) {
+        if (tries >= 1) {
+          handleConfirmDialogOpen();
+        } else {
+          alert('You reached limit of tries');
+        }
+      } else {
+        handleQuestionModalOpen();
+      }
+    } else { alert('You already answered to this question') }
+
   }
-  const handleModalClose = () => {
-    setModalObject({});                                 // make  modalObject plain because if otherwise nex time it will open the same modal 
+
+
+  const onSubmitDialog = () => {
+    refreshParameters();
+    handleConfirmDialogClose();
+    // let dt = { ...dataQ, isOpened: true };
+    // setDataQ(dt);
+    // refreshParameters()
+
+
+    handleQuestionModalOpen();
+
+    // onOpenQuestion();
+  }
+
+
+  const handleConfirmDialogOpen = () => {
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDialogClose = () => {
+    // setTries(tries+1)                           // ************* KASTIL *******************
+    setConfirmDialogOpen(false);
+  };
+
+  const refreshParameters = () => {
+    // setIsOpened(true);
+    // debugger;
+    setSelectedPoints(selectedPoints + dataQ.points)
+    setTries(tries - 1);
+    setStudentObject(studentObject => ({ ...studentObject, ...modalObject }))
+
+    // for (let i = 0; i < examQuestions.length; i++) {
+    //   if (dataQ.id === examQuestions[i].id) {
+    //     // let dt = { ...dataQ, isOpened: true };
+    //     let dt = { ...dataQ };
+    //     dt.isOpened = true;
+    //     console.log({ dt });
+    //     setDataQ({ ...dt })
+    //     let eX = [...examQuestions];
+    //     eX[i] = { ...dataQ };
+    //     console.log({ dataQ });
+    //     console.log({ eX });
+    //     setExamQuestions([...eX]);
+    //     // setExamQuestions(examQuestions[i])
+    //     console.log(examQuestions);
+    //   }
+    // }
+    const updatedQuestions = examQuestions.map(question => {
+      if (question.id === dataQ.id) {
+        return { ...question, isOpened: true };
+      } else {
+        return question;
+      }
+    });
+    setExamQuestions(updatedQuestions);
+    handleQuestionModalOpen();
+  }
+
+  ////
+
+  const handleQuestionModalOpen = () => {
+    // if (!modalObject.isOpened) {
+    //   setInProcessQuestion({ ...inProcessQuestion, isOpened: true });
+    //   setSelectedPoints(selectedPoints + inProcessQuestion.points);
+    //   setTries(tries - 1);
+    //   setStudentObject(studentObject => ({ ...studentObject, ...modalObject }))
+    // }
+
+    localStorage.setItem('tries', JSON.stringify(tries));
+    setQuestionModalState(true);
+  }
+
+  const handleQuestionModalClose = () => {
+    setModalObject({});                                 // make  modalObject plain because otherwise next time it will open the same modal 
     setAnswer('');
-    setModalState(false);                                 // close modal window
+    setQuestionModalState(false);                                 // close modal window
   }
 
 
   useEffect(() => {
     getStudents();
   }, []);
-
-
-  // const navigateToStart = async () => {  // maybe it would be better to just navigate to the nex page and upload the studenObject when finish
-  //   // await addDoc(studentsRef, studentObject);
-  //   // getStudents();
-
-  //   // console.log({ studentObject });
-  //   navigate('/start')
-  // }
 
 
   const getStudents = async () => {
@@ -96,19 +189,7 @@ function App() {
     })
     console.log('fisrt mount');
     localStorage.setItem('examFirstMount', JSON.stringify('inch vor ban '));
-    // }
-    // else {
-    //   console.log('Second Mount');
-    //   const localQuestions = JSON.parse(localStorage.getItem('questions'))
-    //   setExamQuestions(localQuestions)
-    // }
 
-    // setExamQuestions(storage.addExamQuestionsReducer)  
-    // const localQuestions=useSelector(state=>state.addExamQuestionsReducer.addExamQuestionsReducer)
-
-    // }
-
-    // console.log({ examQuestionsArray });
   }
 
 
@@ -125,7 +206,7 @@ function App() {
     localStorage.setItem('selectedPoints', JSON.stringify(selectedPoints));
 
     // localStorage.setItem('score', JSON.stringify(score));
-    handleModalClose();
+    handleQuestionModalClose();
 
   }
 
@@ -159,13 +240,13 @@ function App() {
 
     localStorage.setItem('selectedPoints', JSON.stringify(selectedPoints));
     localStorage.setItem('tries', JSON.stringify(tries));
-    handleModalClose();
+    handleQuestionModalClose();
 
   }
 
   const onFinish = async () => {
     //shift firts object of studentObject.questions[]
-    // apdate studentObject in firebase
+    // update studentObject in firebase
     // stop countdown or move to another page 
     let updateStudentobject = studentObject;
     updateStudentobject.questions.shift();
@@ -174,18 +255,23 @@ function App() {
     await addDoc(studentsRef, updateStudentobject);
     navigate('/end-page')
   }
- 
+
 
 
 
   return (
     <Context.Provider value={{
+      dataQ, setDataQ, onOpenQuestion, refreshParameters, onSubmitDialog,
+      confirmDialogOpen, setConfirmDialogOpen, handleConfirmDialogOpen, handleConfirmDialogClose, confirmDialogAnswer, setConfirmDialogAnswer,
+      // isOpened, setIsOpened, 
+      inProcessQuestion, setInProcessQuestion,
       tries, setTries,
       selectedPoints, setSelectedPoints,
       score, setScore,
-      countDown,setCountDown,
+      countDown, setCountDown,
       // countDownRefresh,
-      
+      // confirmModalState, setConfirmModalState,
+      // handleConfirmModalOpen, handleConfirmModalClose,
       // onStart,
       // navigateToStart,
       studentName, setStudentName,
@@ -193,8 +279,8 @@ function App() {
       // examFirstMount, setExamFirstMount,
       studentObject, setStudentObject, studentsRef,
       setExamQuestions, examQuestions,
-      getExamQuestions, modalState, setModalState,
-      handleModalClose, handleModalOpen, modalObject, setModalObject,
+      getExamQuestions, questionModalState, setQuestionModalState,
+      handleQuestionModalClose, handleQuestionModalOpen, modalObject, setModalObject,
       closeAnswer, submitAnswer, answer, setAnswer, onFinish,
       navigate
     }}>

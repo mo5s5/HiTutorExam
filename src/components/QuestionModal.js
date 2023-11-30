@@ -24,7 +24,7 @@ const style = {
 export default function QuestionModal() {
 
 
-  const { handleModalClose, modalState, closeAnswer, submitAnswer, modalObject, answer, setAnswer } = useContext(Context)
+  const { handleModalClose, questionModalState, closeAnswer, submitAnswer, modalObject, answer, setAnswer } = useContext(Context)
 
   const handleAnswer = (event) => {
     setAnswer(event.target.value)
@@ -37,7 +37,7 @@ export default function QuestionModal() {
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
       <Modal
-        open={modalState}
+        open={questionModalState}
         onClose={handleModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

@@ -6,6 +6,7 @@ import Question from './Question';
 import CountDownTimer from './CountDownTimer';
 import QuestionModal from './QuestionModal';
 import { Button } from '@mui/material';
+import ConfirmDialog from './ConfirmDialog';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { addExamQuestionsReducer, closeUpdateQuestionsReducer } from '../redux/examSlice';
 
@@ -33,7 +34,8 @@ export default function ExamPage() {
             getExamQuestions();
             // localStorage.setItem('score', JSON.stringify(score));                                  //because there could be no actions with this variables. Store them into local
             localStorage.setItem('selectedPoints', JSON.stringify(selectedPoints));
-            localStorage.setItem('score',JSON.stringify(score));
+            localStorage.setItem('score', JSON.stringify(score));
+            localStorage.setItem('tries', JSON.stringify(tries));
         } else {
             console.log('Second Mount');
             const localQuestions = JSON.parse(localStorage.getItem('questions'))
@@ -46,7 +48,7 @@ export default function ExamPage() {
             setScore(localScore);
 
         }
-        return()=>{
+        return () => {
             // localStorage.setItem('tries',JSON.stringify(tries));
         }
 
@@ -77,6 +79,7 @@ export default function ExamPage() {
                 }
             </div>
             <QuestionModal />
+            <ConfirmDialog />
         </div>
     )
 }
